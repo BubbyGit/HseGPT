@@ -1,6 +1,7 @@
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.chat_models.gigachat import GigaChat
 from kandinsky_api.kandinsky import Text2ImageAPI
+from speech_api.speechAPI import text_to_speech
 from PIL import Image
 from io import BytesIO
 import base64
@@ -18,13 +19,15 @@ API_TELEGRAM = api_keys.get("API_Telegram")
 API_CHATGPT = api_keys.get("API_ChatGPT")
 API_GIGACHAT = GigaChat(credentials=api_keys.get("API_GigaChat"), verify_ssl_certs=False)
 API_KANDINSKY = (api_keys.get("API_Kandinsky")).split(':')
+API_SPEECH = api_keys.get("API_Speech")
 
 bot = telebot.TeleBot(API_TELEGRAM)
 
 user_states = {'DEFAULT': 0,
                'GIGACHAT': 1,
                'SETTINGS': 2,
-               'KANDINSKY': 3}
+               'KANDINSKY': 3,
+               'Speech': 4}
 
 
 # Processing the '/start' command
@@ -130,6 +133,27 @@ def kandinsky_img(message):
         image_data_decoded = base64.b64decode(images[0])
         image = Image.open(BytesIO(image_data_decoded))
         bot.send_photo(message.chat.id, image)
+
+
+# Processing the '/speech' command
+@bot.message_handler(commands=['voice'])
+def speech(message):
+    user_states[message.from_user.id] = user_states['Speech']
+    bot.send_message(message.chat.id, 'Напишите текст, который вы бы хотели озвучить. \n'
+                                      '(❗️На данный момент поддерживается только языки: *Английский*)')
+
+
+@bot.message_handler(func=lambda message: user_states.get(message.from_user.id) == user_states['Speech'])
+def voice_convert(message):
+    user_id = message.from_user.id
+    user_input = message.text
+
+    if user_input == 'Остановить бота':
+        bot.send_message(message.chat.id, 'Вы вернулись в главное меню.')
+        user_states[user_id] = user_states['DEFAULT']
+    else:
+        voice = text_to_speech(user_input, API_SPEECH)
+        bot.send_voice(message.chat.id, voice)
 
 
 bot.infinity_polling()
