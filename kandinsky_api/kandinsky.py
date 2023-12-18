@@ -4,6 +4,7 @@ import time
 import requests
 
 
+# Данная часть взята из документации https://fusionbrain.ai/docs/doc/api-dokumentaciya/
 class Text2ImageAPI:
 
     def __init__(self, url, api_key, secret_key):
@@ -46,3 +47,5 @@ class Text2ImageAPI:
 
             attempts -= 1
             time.sleep(delay)
+
+# Данная часть взята из документации https://fusionbrain.ai/docs/doc/api-dokumentaciya/
