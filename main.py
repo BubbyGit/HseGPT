@@ -36,6 +36,14 @@ user_states = {'DEFAULT': 0,
 # Processing the '/start' command
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
+    """
+    После отправки сообщения /start пишет приветcтвенное сообщение, если пользователь уже пользовался ботом, то устанавливает предыдущий характер бота, в ином случае характер='Ты помогаешь пользователю решить его проблемы'.
+    
+    Args:
+        message (str): сообщение пользователя.
+    Returns:
+        str: Отправляет привественное сообщение пользователю.
+    """
     sql_connect = sqlite3.connect("users.db")
     user_id = message.from_user.id
 
@@ -57,6 +65,14 @@ def send_welcome(message):
 # Processing the '/settings' command
 @bot.message_handler(commands=['settings'])
 def settings(message):
+    """
+    При отправке пользователем сообщения /settings, переводится в режим "SETTINGS" и отправляет сообщение с выбором характера бота.
+    
+    Args: 
+        message (str): сообщение пользователя.
+    Returns: 
+        str: Отправляет сообщение с выбором характера бота.
+    """
     user_states[message.from_user.id] = user_states['SETTINGS']
     with open('messages/ru-ru/character.txt', 'r', encoding='utf-8') as file:
         character_message = file.read()
@@ -65,6 +81,14 @@ def settings(message):
 
 @bot.message_handler(func=lambda message: user_states.get(message.from_user.id) == user_states['SETTINGS'])
 def settings_set(message):
+    """
+    При нахождении в режиме 'SETTINGS' после установки характера пользователем отправляет сообщение 'Характер успешно установлен' и переводит в режим 'DEFAULT'.
+    
+    Args: 
+        message (str): сообщение пользователя.
+    Returns: 
+        str: Отправляет сообщение об успешной установке характера.
+    """
     user_id = message.from_user.id
     user_input = message.text
 
@@ -81,12 +105,28 @@ def settings_set(message):
 # Processing the '/giga' command
 @bot.message_handler(commands=['giga'])
 def giga(message):
+    """
+    При отправке пользователем сообщения /giga отправляет сообщение 'Задавай мне вопросы' и переводит в режим  'GIGACHAT'.
+    
+    Args: 
+        message (str): сообщение пользователя.
+    Returns:
+        str: Отправляет сообщение 'Задавай мне вопросы'.
+    """
     user_states[message.from_user.id] = user_states['GIGACHAT']
     bot.send_message(message.chat.id, 'Задавай мне вопросы')
 
 
 @bot.message_handler(func=lambda message: user_states.get(message.from_user.id) == user_states['GIGACHAT'])
 def gigachat(message):
+    """
+    При нахождении в режиме 'GIGACHAT' при отправке пользователем сообщения "остановить бота" возвращает пользователя в главное меню, переводит в режим 'DEFAULT' и отправляет сообщение 'Вы вернулись в главное меню.', в ином случае обрабатывает запрос пользователя и отправляет ответ.
+    
+    Args: 
+        message (str): сообщение пользователя.
+    Returns:
+        str: Возвращает в главное меню либо отвечает на запрос.
+    """
     user_id = message.from_user.id
     user_input = message.text
 
@@ -114,12 +154,29 @@ def gigachat(message):
 # Processing the '/img' command
 @bot.message_handler(commands=['img'])
 def kandinsky(message):
+    """
+    При отправке пользователем сообщения /img отправляет сообщение 'Напишите, что вы хотите сгенерировать.'.
+    
+    Args: 
+        message (str): сообщение пользователя.
+    Returns: 
+        str: Отправляет сообщение 'Напишите, что вы хотите сгенерировать.'.
+    """
     user_states[message.from_user.id] = user_states['KANDINSKY']
     bot.send_message(message.chat.id, 'Напишите, что вы хотите сгенерировать.')
 
 
 @bot.message_handler(func=lambda message: user_states.get(message.from_user.id) == user_states['KANDINSKY'])
 def kandinsky_img(message):
+    """
+    При нахождении в режиме 'KANDINSKY' при отправке пользователем сообщения 'Остановить бота' возвращает пользователя в главное меню, переводит в режим 'DEFAULT' и отправляет сообщение 'Вы вернулись в главное меню.', в ином случае гененирует картинку по запросу пользователя.
+    
+    Args: 
+        message (str): сообщение пользователя.
+    Returns: 
+        str: Возвращает в главное меню либо генерирует картинку.
+    """
+
     user_id = message.from_user.id
     user_input = message.text
 
@@ -141,6 +198,14 @@ def kandinsky_img(message):
 # Processing the '/speech' command
 @bot.message_handler(commands=['voice'])
 def speech(message):
+    """
+    При отправке пользователем сообщения /speech переводит в режим 'Speech' и отправляет сообщение 'Напишите текст, который вы бы хотели озвучить. \n (❗️На данный момент поддерживается только языки: *Английский*)'.
+    
+    Args: 
+        message (str): сообщение пользователя.
+    Returns: 
+        str: Отправляет сообщение 'Напишите текст, который вы бы хотели озвучить. \n (❗️На данный момент поддерживается только языки: *Английский*)'.
+    """
     user_states[message.from_user.id] = user_states['Speech']
     bot.send_message(message.chat.id, 'Напишите текст, который вы бы хотели озвучить. \n'
                                       '(❗️На данный момент поддерживается только языки: *Английский*)')
@@ -148,6 +213,14 @@ def speech(message):
 
 @bot.message_handler(func=lambda message: user_states.get(message.from_user.id) == user_states['Speech'])
 def voice_convert(message):
+    """
+    При нахождении в режиме 'Speech' при отправке пользователем сообщения 'Остановить бота' возрващает в главное меню, переводит в режим 'DEFAULT' и отправляет сообщение 'Вы вернулись в главное меню.', в ином случае преобразует текст, написанный пользователем на английском, в голосовое сообщение.
+    
+    Args: 
+        message (str): сообщение пользователя.
+    Returns:
+        str: Возвращает пользователся в главное меню либо отправляет голосовое сообщение.
+    """
     user_id = message.from_user.id
     user_input = message.text
 
@@ -162,6 +235,14 @@ def voice_convert(message):
 # Processing the '/gptpro' command
 @bot.message_handler(commands=['gptpro'])
 def yandex(message):
+    """
+    При отправке пользователем сообщения /gptpro переводит пользователя в режим 'Yandex' и отправляет приветственное сообщение о gptpro.
+
+    Args: 
+        message (str): сообщение пользователя.
+    Returns: 
+        str: Отправляет приветственное сообщение о gptpro.
+    """
     user_states[message.from_user.id] = user_states['Yandex']
 
     with open('messages/ru-ru/yandex_send.txt', 'r', encoding='utf-8') as file:
@@ -172,6 +253,14 @@ def yandex(message):
 
 @bot.message_handler(func=lambda message: user_states.get(message.from_user.id) == user_states['Yandex'])
 def yandex_gpt(message):
+    """
+    При нахождении в режиме 'Yandex' при отправке пользователем сообщения 'Остановить бота' возвращает пользователя в главное меню, переводит в режим 'DEFAULT' и отправляет сообщение 'Вы вернулись в главное меню.', в ином случае обрабатывает запрос пользователся и отправляет ответ.
+
+    Args:
+        message (str): сообщение пользователя.
+    Returns:
+        str: Возвращает пользователя в главное меню либо отвечает на запрос.
+    """
     user_id = message.from_user.id
     user_input = message.text
 
