@@ -4,8 +4,7 @@
 *Данный репозиторий содержит исходный код телеграм бота.*
 
 
-<a href='https://t.me/HSETeleBot' target='_blank'><img height='35' style='border:0px;height:46px;' src='![image](https://github.com/BubbyGit/HseGPT/assets/145377794/0a7c46e3-2015-4657-93e8-35a24bf14eb5)
-' border='0' alt='Ссылка на нашего Telegram бота' />
+<a href='https://t.me/HSETeleBot' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://avatars.mds.yandex.net/get-yapic/63032/6YqaygCM7NfNJSUb2F2f84utk-1/islands-200' border='0' alt='Ссылка на нашего Telegram бота' />
 <div id="top"></div>
 ---
 
