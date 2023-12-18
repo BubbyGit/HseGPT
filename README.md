@@ -3,6 +3,7 @@
 *Телеграм бот с настраиваемым характером, генерацией изображений и преобразованием текста в голос*
 *Данный репозиторий содержит исходный код телеграм бота.*
 
+---
 
 <a href='https://t.me/HSETeleBot' target='_blank'><img height='1000' style='border:0px;height:200px;' src='https://avatars.mds.yandex.net/get-altay/11400795/2a0000018c7eb33f2c3c98c0e90e67051ef4/XXXL' border='0' alt='Ссылка на нашего Telegram бота' />
 <div id="top"></div>
