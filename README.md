@@ -2,8 +2,10 @@
 
 *Телеграм бот с настраиваемым характером, генерацией изображений и преобразованием текста в голос*
 *Данный репозиторий содержит исходный код телеграм бота.*
-Ссылка на нашего Telegram бота:
-https://t.me/HSETeleBot
+
+
+<a href='https://t.me/HSETeleBot' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Ссылка на нашего Telegram бота' />
+<div id="top"></div>
 ---
 
 ![\[\](HSEprewiew.png)](HSEprewiew.png)
