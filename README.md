@@ -4,7 +4,7 @@
 *Данный репозиторий содержит исходный код телеграм бота.*
 
 
-<a href='https://t.me/HSETeleBot' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Ссылка на нашего Telegram бота' />
+<a href='https://t.me/HSETeleBot' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://t.me/HSETeleBot' border='0' alt='Ссылка на нашего Telegram бота' />
 <div id="top"></div>
 ---
 
