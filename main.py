@@ -2,6 +2,7 @@ from langchain.schema import HumanMessage, SystemMessage
 from langchain.chat_models.gigachat import GigaChat
 from kandinsky_api.kandinsky import Text2ImageAPI
 from speech_api.speechAPI import text_to_speech
+from yandex_api.yandex_gpt import yandex_gpt_completion
 from PIL import Image
 from io import BytesIO
 import base64
@@ -20,6 +21,7 @@ API_CHATGPT = api_keys.get("API_ChatGPT")
 API_GIGACHAT = GigaChat(credentials=api_keys.get("API_GigaChat"), verify_ssl_certs=False)
 API_KANDINSKY = (api_keys.get("API_Kandinsky")).split(':')
 API_SPEECH = api_keys.get("API_Speech")
+API_YANDEX = (api_keys.get("API_Yandex")).split(':')
 
 bot = telebot.TeleBot(API_TELEGRAM)
 
@@ -27,7 +29,8 @@ user_states = {'DEFAULT': 0,
                'GIGACHAT': 1,
                'SETTINGS': 2,
                'KANDINSKY': 3,
-               'Speech': 4}
+               'Speech': 4,
+               'Yandex': 5}
 
 
 # Processing the '/start' command
@@ -154,6 +157,37 @@ def voice_convert(message):
     else:
         voice = text_to_speech(user_input, API_SPEECH)
         bot.send_voice(message.chat.id, voice)
+
+
+# Processing the '/gptpro' command
+@bot.message_handler(commands=['gptpro'])
+def yandex(message):
+    user_states[message.from_user.id] = user_states['Yandex']
+
+    with open('messages/ru-ru/yandex_send.txt', 'r', encoding='utf-8') as file:
+        welcome_message = file.read()
+
+    bot.send_message(message.chat.id, welcome_message)
+
+
+@bot.message_handler(func=lambda message: user_states.get(message.from_user.id) == user_states['Yandex'])
+def yandex_gpt(message):
+    user_id = message.from_user.id
+    user_input = message.text
+
+    sql_connect = sqlite3.connect("users.db")
+    cursor = sql_connect.cursor()
+    cursor.execute('SELECT Character_Giga FROM result WHERE ID = ?', (user_id,))
+    character_input = (cursor.fetchone())[0]
+    sql_connect.close()
+
+    print(user_input, character_input, API_YANDEX[0], API_YANDEX[1])
+
+    if user_input == 'Остановить бота':
+        bot.send_message(message.chat.id, 'Вы вернулись в главное меню.')
+        user_states[user_id] = user_states['DEFAULT']
+    else:
+        bot.send_message(user_id, yandex_gpt_completion(user_input, character_input, API_YANDEX[0], API_YANDEX[1]))
 
 
 bot.infinity_polling()
